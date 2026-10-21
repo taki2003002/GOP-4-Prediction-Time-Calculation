@@ -1,0 +1,6 @@
+# Dependencies for running prediction-time measurement on GitHub Actions (CPU).
+# torch is installed separately in the workflow from the PyTorch CPU index.
+# torchvision is NOT required (script uses PIL + numpy for preprocessing).
+numpy
+pillow
+pandas

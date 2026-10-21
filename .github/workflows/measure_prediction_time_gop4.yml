@@ -1,0 +1,57 @@
+# =============================================================================
+# GOP-4 prediction-time measurement ONLY (for dedicated repo / quota)
+# =============================================================================
+# Data : Archive/VVC Reconstructed/All same resolution - GOP 4/
+# Model: best_model_gop4.pt
+# Out  : Archive/Class Prediction Time/GOP-4/prediction_times_Class*.csv
+# =============================================================================
+
+name: Measure Prediction Time (GOP-4)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  measure:
+    name: "GOP4 measure ${{ matrix.class_folder }}"
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    strategy:
+      fail-fast: false
+      matrix:
+        class_folder: [ClassA, ClassB, ClassC, ClassD]
+
+    env:
+      THESIS_ROOT: ${{ github.workspace }}
+      MEASURE_CLASS: ${{ matrix.class_folder }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install CPU PyTorch + deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -r requirements-ci.txt
+
+      - name: Verify GOP-4 inputs
+        run: |
+          test -f best_model_gop4.pt
+          test -d "Archive/VVC Reconstructed/All same resolution - GOP 4/${{ matrix.class_folder }}"
+          find "Archive/VVC Reconstructed/All same resolution - GOP 4/${{ matrix.class_folder }}" -name recon.yuv | head -1 | grep -q .
+          python -c "import torch; print('torch', torch.__version__, 'cuda?', torch.cuda.is_available())"
+
+      - name: Measure prediction times (GOP-4)
+        run: python calculate_prediction_time_gop4.py
+
+      - name: Upload per-class CSV
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gop4-prediction-times-${{ matrix.class_folder }}
+          path: Archive/Class Prediction Time/GOP-4/prediction_times_${{ matrix.class_folder }}.csv
+          if-no-files-found: warn

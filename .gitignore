@@ -1,0 +1,23 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.DS_Store
+Thumbs.db
+Archive/Class Prediction Time/
+*.zip
+*.rar
+*.7z
+*.log
+!**/encode.log
+Archive/VVC Reconstructed/**/P_*.yuv
+Archive/VVC Reconstructed/**/B_*.bin
+Archive/VVC Reconstructed/**/C_*.yuv
+Archive/VVC Reconstructed/**/predicted.yuv
+Archive/VVC Reconstructed/**/gop_metrics.csv
+Archive/VVC Reconstructed/**/yuvplayer.exe
+Archive/VVC Reconstructed/**/*.csv
+Archive/VVC Reconstructed/All same resolution - GOP 4/ClassA/*.yuv
+Archive/VVC Reconstructed/All same resolution - GOP 4/ClassB/*.yuv
+Archive/VVC Reconstructed/All same resolution - GOP 4/ClassC/*.yuv
+Archive/VVC Reconstructed/All same resolution - GOP 4/ClassD/*.yuv
